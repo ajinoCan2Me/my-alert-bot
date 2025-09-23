@@ -3,6 +3,12 @@ import requests
 import imaplib
 import email
 
+GMAIL_USER = os.environ.get("GMAIL_USER")
+GMAIL_PASS = os.environ.get("GMAIL_PASS")
+
+print("DEBUG: Gmail user =", GMAIL_USER)
+print("DEBUG: Gmail pass is set =", GMAIL_PASS is not None)
+
 # Discord Webhook URL（Secrets から環境変数で取得）
 WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
 
