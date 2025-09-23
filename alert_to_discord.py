@@ -2,7 +2,9 @@ import os
 import requests
 import imaplib
 import email
+import re
 
+# Gmail 認証情報（Secrets から）
 GMAIL_USER = os.environ.get("GMAIL_USER")
 GMAIL_PASS = os.environ.get("GMAIL_PASS")
 WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
@@ -29,10 +31,13 @@ def get_latest_alert():
 
     for part in msg.walk():
         if part.get_content_type() == "text/plain":
-            return part.get_payload(decode=True).decode()
+            body = part.get_payload(decode=True).decode()
+            # URL (http) の前で改行
+            body = re.sub(r"(?<!\n)(http)", r"\n\1", body)
+            return body
     return "本文が取得できませんでした"
 
-# Discord にメッセージを分割して送信
+# Discord に分割して送信
 def send_to_discord(message):
     MAX_LENGTH = 2000
     for i in range(0, len(message), MAX_LENGTH):
